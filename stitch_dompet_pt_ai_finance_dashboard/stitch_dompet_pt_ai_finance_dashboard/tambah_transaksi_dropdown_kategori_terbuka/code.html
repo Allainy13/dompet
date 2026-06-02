@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tambah Transaksi - DOMPET PT AI</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#2f3a4c",
+                      "surface-tint": "#b9c7e4",
+                      "surface-container-highest": "#2a3548",
+                      "on-primary-container": "#74829d",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary": "#003824",
+                      "inverse-primary": "#515f78",
+                      "surface-dim": "#081425",
+                      "surface-container": "#152031",
+                      "tertiary": "#4cd7f6",
+                      "on-secondary-fixed-variant": "#005236",
+                      "on-primary-fixed": "#0d1c32",
+                      "on-error": "#690005",
+                      "inverse-on-surface": "#263143",
+                      "surface-variant": "#2a3548",
+                      "secondary-fixed-dim": "#4edea3",
+                      "tertiary-fixed": "#acedff",
+                      "secondary-fixed": "#6ffbbe",
+                      "primary-container": "#0a192f",
+                      "on-background": "#d8e3fb",
+                      "error-container": "#93000a",
+                      "on-surface-variant": "#c5c6cd",
+                      "on-secondary-container": "#00311f",
+                      "surface-container-low": "#111c2d",
+                      "primary-fixed-dim": "#b9c7e4",
+                      "surface-container-lowest": "#040e1f",
+                      "inverse-surface": "#d8e3fb",
+                      "surface": "#081425",
+                      "primary": "#b9c7e4",
+                      "on-tertiary": "#003640",
+                      "outline-variant": "#44474d",
+                      "secondary": "#4edea3",
+                      "on-primary-fixed-variant": "#39475f",
+                      "on-tertiary-container": "#008ea6",
+                      "error": "#ffb4ab",
+                      "primary-fixed": "#d6e3ff",
+                      "tertiary-container": "#001c22",
+                      "on-tertiary-fixed": "#001f26",
+                      "background": "#081425",
+                      "on-secondary-fixed": "#002113",
+                      "surface-container-high": "#1f2a3c",
+                      "secondary-container": "#00a572",
+                      "on-surface": "#d8e3fb",
+                      "on-primary": "#233148",
+                      "outline": "#8f9097",
+                      "tertiary-fixed-dim": "#4cd7f6",
+                      "on-tertiary-fixed-variant": "#004e5c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "xs": "4px",
+                      "grid-gutter": "16px",
+                      "sm": "8px",
+                      "grid-margin": "24px",
+                      "xl": "32px",
+                      "grid-columns-desktop": "12",
+                      "lg": "24px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "title-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-md": ["Inter"]
+              },
+              "fontSize": {
+                      "title-md": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-sm": ["11px", {"lineHeight": "16px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Hide scrollbar for clean app-like appearance */
+        ::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Smooth interactions */
+        .interactive:active { transform: scale(0.97); }
+    </style>
+<style>
+  @keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+</style></head>
+<body class="bg-surface-dim min-h-screen font-body-lg text-on-surface antialiased flex justify-center">
+<!-- Mobile Device Container -->
+<main class="w-full max-w-md bg-surface h-[100dvh] flex flex-col relative overflow-hidden shadow-2xl">
+<!-- Top App Bar (Task Context - Back Button) -->
+<header class="flex items-center px-md h-14 w-full bg-surface sticky top-0 z-20 shadow-[0_1px_0_0_rgba(255,255,255,0.05)]">
+<button class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center hover:bg-surface-variant/50 interactive transition-colors text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="ml-2 font-title-md text-title-md text-on-surface">Tambah Transaksi</h1>
+<div class="flex-1"></div>
+<!-- Optional action or spacing to balance header -->
+</header>
+<!-- Scrollable Form Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar px-md py-lg pb-32"><div class="mb-lg flex items-center space-x-3 p-md bg-tertiary/10 border border-tertiary/30 rounded-xl">
+<span class="material-symbols-outlined text-tertiary">check_circle</span>
+<span class="text-body-md text-on-surface font-medium">AI: Data berhasil diekstrak dari nota</span>
+</div>
+<!-- Nominal Input -->
+<div class="flex flex-col items-center justify-center mt-sm mb-lg">
+<span class="font-label-md text-label-md text-on-surface-variant tracking-widest mb-xs">NOMINAL</span>
+<div class="flex items-center justify-center text-error" id="currency-symbol-container">
+<span class="font-headline-lg-mobile text-headline-lg-mobile mr-2">Rp</span>
+<input autofocus="" class="bg-transparent border-none p-0 w-[200px] text-center font-display-lg text-display-lg text-on-surface focus:ring-0 placeholder-on-surface-variant/30 appearance-none" placeholder="0" type="number" value="1250000"/>
+</div>
+</div><div class="flex justify-center -mt-6 mb-lg">
+<button class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-primary-container text-primary border border-primary/20 hover:bg-primary/20 transition-colors interactive">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider">Scan Nota untuk isi otomatis</span>
+</button>
+</div>
+<!-- Transaction Type Segmented Control -->
+<div class="flex bg-surface-container rounded-full p-1 border border-surface-container-highest mb-lg relative">
+<div class="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-error/15 rounded-full transition-transform duration-300 ease-in-out" id="segment-indicator"></div>
+<button class="flex-1 py-2.5 rounded-full flex items-center justify-center space-x-2 text-error font-label-md text-label-md relative z-10 interactive" id="btn-expense">
+<span class="material-symbols-outlined" style="font-size: 18px;">arrow_downward</span>
+<span class="">Pengeluaran</span>
+</button>
+<button class="flex-1 py-2.5 rounded-full flex items-center justify-center space-x-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md relative z-10 interactive transition-colors" id="btn-income">
+<span class="material-symbols-outlined" style="font-size: 18px;">arrow_upward</span>
+<span class="">Pemasukan</span>
+</button>
+</div>
+<div class="space-y-sm">
+<!-- Project Field -->
+<div class="bg-surface-container-highest rounded-t-lg border-b-2 border-outline-variant px-md pt-3 pb-2 relative group focus-within:border-primary transition-colors">
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1 group-focus-within:text-primary transition-colors">Project</label>
+<select class="w-full bg-transparent border-none p-0 font-body-lg text-body-lg text-on-surface focus:ring-0 appearance-none"><option class="text-on-surface-variant" disabled="" value="">Pilih Project...</option><option selected="" value="srv">Pengadaan Server Data Center</option><option value="mkt">Marketing Q4</option><option value="rnd">R&amp;D AI Core</option></select>
+<span class="material-symbols-outlined absolute right-md top-1/2 transform -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">arrow_drop_down</span>
+</div>
+<!-- Category Field -->
+<div class="bg-surface-container-highest rounded-t-lg border-b-2 border-outline-variant px-md pt-3 pb-2 relative group focus-within:border-primary transition-colors cursor-pointer border-primary">
+<label class="font-label-sm text-label-sm text-primary block mb-1 transition-colors">Kategori</label>
+<div class="relative flex items-center">
+<select class="w-full bg-transparent border-none p-0 font-body-lg text-body-lg text-on-surface focus:ring-0 appearance-none cursor-pointer">
+<option class="text-on-surface-variant" disabled="" value="">Pilih Kategori...</option>
+<option value="op">Operasional</option>
+<option selected="" value="it">IT &amp; Tech</option>
+<option value="hr">HR &amp; Payroll</option>
+</select>
+<span class="material-symbols-outlined absolute right-0 text-primary pointer-events-none transition-colors">arrow_drop_down</span>
+</div><div class="absolute left-0 right-0 top-full mt-1 bg-surface-container-high rounded-xl shadow-2xl z-30 py-2 border border-outline-variant/30 overflow-hidden"><div class="flex items-center justify-between px-md py-3 bg-primary/10 text-on-surface hover:bg-surface-variant transition-colors cursor-pointer"><span class="text-body-md font-medium">IT &amp; Tech</span><span class="material-symbols-outlined text-primary text-[20px]">check</span></div><div class="flex items-center justify-between px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors cursor-pointer"><span class="text-body-md">Operasional</span></div><div class="flex items-center justify-between px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors cursor-pointer"><span class="text-body-md">Marketing</span></div><div class="flex items-center justify-between px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors cursor-pointer"><span class="text-body-md">Fasilitas</span></div><div class="flex items-center justify-between px-md py-3 text-on-surface-variant hover:bg-surface-variant/50 transition-colors cursor-pointer"><span class="text-body-md">Gaji &amp; THR</span></div></div>
+</div>
+<!-- Account Field -->
+<div class="bg-surface-container-highest rounded-t-lg border-b-2 border-outline-variant px-md pt-3 pb-2 relative group focus-within:border-primary transition-colors">
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1 group-focus-within:text-primary transition-colors">Rekening Sumber</label>
+<select class="w-full bg-transparent border-none p-0 font-body-lg text-body-lg text-on-surface focus:ring-0 appearance-none">
+<option value="bca">BCA Corporate - 892xxxxx</option>
+<option value="mdr">Mandiri Giro - 104xxxxx</option>
+<option value="csh">Petty Cash HQ</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 transform -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">arrow_drop_down</span>
+</div>
+<!-- Date Picker -->
+<div class="bg-surface-container-highest rounded-t-lg border-b-2 border-outline-variant px-md pt-3 pb-2 relative group focus-within:border-primary transition-colors">
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1 group-focus-within:text-primary transition-colors">Tanggal Transaksi</label>
+<input class="w-full bg-transparent border-none p-0 font-body-lg text-body-lg text-on-surface focus:ring-0 [color-scheme:dark]" type="date" value="2023-11-01"/>
+<span class="material-symbols-outlined absolute right-md top-1/2 transform -translate-y-1/2 text-on-surface-variant pointer-events-none group-focus-within:text-primary transition-colors">calendar_today</span>
+</div>
+<!-- Description Field -->
+<div class="bg-surface-container-highest rounded-t-lg border-b-2 border-outline-variant px-md pt-3 pb-2 group focus-within:border-primary transition-colors">
+<label class="font-label-sm text-label-sm text-on-surface-variant block mb-1 group-focus-within:text-primary transition-colors">Keterangan (Opsional)</label>
+<textarea class="w-full bg-transparent border-none p-0 font-body-lg text-body-lg text-on-surface focus:ring-0 resize-none h-20" placeholder="Tambahkan catatan untuk transaksi ini..."></textarea>
+</div>
+</div>
+<!-- Upload Bukti -->
+<div class="mt-lg border-2 border-dashed border-surface-variant rounded-xl p-lg flex flex-col items-center justify-center bg-surface-container-low hover:bg-surface-container hover:border-primary/50 transition-all cursor-pointer group interactive"><div class="relative w-full flex flex-col items-center">
+<!-- Scanning Animation Overlay (Hidden by default, triggered by AI Scan) -->
+<div class="absolute inset-0 bg-primary/5 hidden flex-col items-center justify-center rounded-xl overflow-hidden" id="ai-scan-overlay">
+<div class="w-full h-0.5 bg-primary/50 shadow-[0_0_10px_rgba(185,199,228,0.8)] absolute top-0 animate-[scan_2s_linear_infinite]"></div>
+<div class="flex items-center space-x-2 bg-surface-container-high px-4 py-2 rounded-full border border-primary/30 shadow-lg">
+<span class="material-symbols-outlined animate-spin text-primary">progress_activity</span>
+<span class="text-primary font-label-md uppercase tracking-widest">AI Processing...</span>
+</div>
+</div>
+<div class="w-24 h-32 rounded-lg bg-surface-container-highest border border-outline-variant overflow-hidden mb-sm shadow-inner group-hover:border-primary/50 transition-colors">
+<img alt="Receipt Preview" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCREh4Xnl9sWknzyAvhQHf2dd5H6sLBORCO2ycwY0km2k0evoJf0-hfpgICfJdw8k-Jc2Y9eZKCar8hA8RQPwCdbJAn3AIyl-h1V2et4b88X-OXwk8wIgutQDi8SoTUrbT6-PEg9n69HKRf1LLh6yGNRcn99e4PV7EkoTqQf57o3kSTY8kVNgM2qNJvO0zIr2XXuvKnAKfv1R0T5cZsIpxxiy6Eb18mcsRT83MZJH7S-aaLbtm29TKCACLU5GN0YMVUtUUy8Oqxc0c"/>
+</div>
+<span class="font-title-md text-title-md text-on-surface">Upload Bukti</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 text-center">Format JPG, PNG atau PDF<br/>Maksimal 5MB</span>
+<button class="mt-4 flex items-center space-x-2 px-4 py-2 rounded-full bg-tertiary-container text-tertiary border border-tertiary/20 hover:bg-tertiary/20 transition-all interactive z-10">
+<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>
+<span class="font-label-md font-semibold tracking-wide uppercase">AI Scan</span>
+</button>
+</div></div>
+</div>
+<!-- Fixed Bottom Action -->
+<div class="absolute bottom-0 left-0 w-full p-md bg-surface border-t border-surface-container-low shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-20 pb-8 md:pb-md">
+<button class="w-full h-12 bg-primary text-on-primary rounded-full font-title-md text-title-md flex items-center justify-center space-x-2 hover:opacity-90 interactive transition-all shadow-md">
+<span class="material-symbols-outlined">save</span>
+<span class="">Simpan Transaksi</span>
+</button>
+</div>
+</main>
+<!-- UI Logic Script -->
+<script>
+        // Segmented control logic for Expense vs Income
+        const btnExpense = document.getElementById('btn-expense');
+        const btnIncome = document.getElementById('btn-income');
+        const indicator = document.getElementById('segment-indicator');
+        const currencySymbolContainer = document.getElementById('currency-symbol-container');
+
+        btnExpense.addEventListener('click', () => {
+            // Move indicator left
+            indicator.style.transform = 'translateX(0)';
+            indicator.className = 'absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-error/15 rounded-full transition-transform duration-300 ease-in-out';
+            
+            // Text styling
+            btnExpense.classList.add('text-error');
+            btnExpense.classList.remove('text-on-surface-variant', 'hover:text-on-surface');
+            btnIncome.classList.remove('text-secondary');
+            btnIncome.classList.add('text-on-surface-variant', 'hover:text-on-surface');
+
+            // Currency styling to match intent
+            currencySymbolContainer.classList.remove('text-secondary');
+            currencySymbolContainer.classList.add('text-error');
+        });
+
+        btnIncome.addEventListener('click', () => {
+            // Move indicator right
+            indicator.style.transform = 'translateX(100%)';
+            indicator.className = 'absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-secondary/15 rounded-full transition-transform duration-300 ease-in-out';
+            
+            // Text styling
+            btnIncome.classList.add('text-secondary');
+            btnIncome.classList.remove('text-on-surface-variant', 'hover:text-on-surface');
+            btnExpense.classList.remove('text-error');
+            btnExpense.classList.add('text-on-surface-variant', 'hover:text-on-surface');
+
+            // Currency styling to match intent
+            currencySymbolContainer.classList.remove('text-error');
+            currencySymbolContainer.classList.add('text-secondary');
+        });
+    </script>
+</body></html>
