@@ -22,6 +22,26 @@ function downloadFile(name, type, content) {
   window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
+function openPrintableReport(file) {
+  try {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) {
+      downloadFile(file.fileName, file.contentType, file.content);
+      return false;
+    }
+
+    printWindow.document.open();
+    printWindow.document.write(file.content);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.setTimeout(() => printWindow.print(), 300);
+    return true;
+  } catch {
+    downloadFile(file.fileName, file.contentType, file.content);
+    return false;
+  }
+}
+
 function uniqueOptions(values, fallbackLabel) {
   const options = Array.from(new Set(values.filter(Boolean)));
   return [fallbackLabel, ...options];
@@ -96,6 +116,14 @@ export default function Laporan({ mock, settings, profile, currentRole = "Viewer
     await logReportAction(`Akses ditolak: ${action}`);
     onToast(message);
     return false;
+  }
+
+  async function handlePdfExport() {
+    if (!(await guardExport("cetak PDF"))) return;
+    const file = await reportService.exportPrintableReport(filters.reportType, serviceFilters);
+    const opened = openPrintableReport(file);
+    await logReportAction(opened ? "Cetak PDF" : "Download HTML cetak");
+    onToast(opened ? "Jendela cetak PDF dibuka" : "Popup dibatasi browser, HTML cetak diunduh");
   }
 
   async function handleCsvExport() {
@@ -177,7 +205,7 @@ export default function Laporan({ mock, settings, profile, currentRole = "Viewer
 
   const actions = (
     <>
-      <button className="ghost-button" type="button" onClick={() => onToast("Ekspor PDF segera disiapkan pada tahap berikutnya")}><Icon name="picture_as_pdf" /> PDF Segera</button>
+      <button className="ghost-button" type="button" onClick={handlePdfExport}><Icon name="picture_as_pdf" /> Cetak PDF</button>
       <button className="ghost-button" type="button" onClick={handleCsvExport}><Icon name="table_view" /> Ekspor CSV</button>
       <button className="ghost-button" type="button" onClick={handleJsonExport}><Icon name="data_object" /> Ekspor JSON</button>
       <button className="ghost-button" type="button" onClick={handleWhatsAppCopy}><Icon name="content_copy" /> Copy WhatsApp</button>

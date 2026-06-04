@@ -287,6 +287,120 @@ function csvEscape(value) {
   return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
+function htmlEscape(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  }[char]));
+}
+
+function printableRows(rows = [], columns = []) {
+  if (!rows.length) {
+    return `<tr><td colspan="${columns.length || 1}" class="empty">Tidak ada data untuk filter aktif.</td></tr>`;
+  }
+
+  return rows.map((row) => `<tr>${columns.map((column) => `<td>${htmlEscape(row[column] || "-")}</td>`).join("")}</tr>`).join("");
+}
+
+function buildPrintableReportHtml(report = {}) {
+  const columns = report.columns || [];
+  const summary = report.summary || {};
+  const generatedAt = new Intl.DateTimeFormat("id-ID", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date());
+
+  return `<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${htmlEscape(`Laporan ${report.title || "Keuangan"}`)}</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, "Segoe UI", Arial, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f3f7fb; color: #0d1c32; font-size: 12px; line-height: 1.45; }
+    main { width: min(1120px, 100%); margin: 0 auto; padding: 28px; }
+    header { display: flex; justify-content: space-between; gap: 18px; border-bottom: 2px solid #1b7f61; padding-bottom: 18px; }
+    h1 { margin: 0; font-size: 26px; line-height: 1.15; }
+    h2 { margin: 22px 0 10px; font-size: 16px; }
+    p { margin: 6px 0 0; color: #46566d; }
+    .meta { text-align: right; color: #46566d; white-space: nowrap; }
+    .summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+    .card { border: 1px solid #d8e0ea; border-radius: 8px; background: #fff; padding: 12px; }
+    .label { color: #637083; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+    .value { display: block; margin-top: 6px; color: #0d1c32; font-size: 18px; font-weight: 800; }
+    .note { margin-top: 18px; border: 1px solid #d8e0ea; border-radius: 8px; background: #fff; padding: 12px; }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; border: 1px solid #d8e0ea; background: #fff; }
+    th, td { border-bottom: 1px solid #e5ebf2; padding: 9px 10px; text-align: left; vertical-align: top; }
+    th { background: #10243b; color: #f7fbff; font-size: 11px; text-transform: uppercase; }
+    tr:nth-child(even) td { background: #f8fbfe; }
+    td { color: #17263a; }
+    .empty { color: #637083; text-align: center; }
+    footer { margin-top: 22px; color: #637083; font-size: 11px; }
+    @media (max-width: 720px) {
+      main { padding: 18px; }
+      header { display: block; }
+      .meta { margin-top: 10px; text-align: left; white-space: normal; }
+      .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media print {
+      body { background: #fff; }
+      main { width: 100%; padding: 0; }
+      .card, .note, table { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>${htmlEscape(report.title || "Laporan Keuangan")}</h1>
+        <p>${htmlEscape(report.summaryText || "Ringkasan laporan keuangan DOMPET PT AI.")}</p>
+      </div>
+      <div class="meta">
+        <strong>DOMPET PT AI</strong><br />
+        Periode: ${htmlEscape(report.period || "-")}<br />
+        Dibuat: ${htmlEscape(generatedAt)}<br />
+        Sumber: ${report.isMock ? "Demo/Mock" : "Supabase"}
+      </div>
+    </header>
+    <section class="summary" aria-label="Ringkasan laporan">
+      <article class="card"><span class="label">Pemasukan</span><strong class="value">${htmlEscape(summary.incomeLabel || currency(0))}</strong></article>
+      <article class="card"><span class="label">Pengeluaran</span><strong class="value">${htmlEscape(summary.expenseLabel || currency(0))}</strong></article>
+      <article class="card"><span class="label">Saldo Bersih</span><strong class="value">${htmlEscape(summary.netLabel || currency(0))}</strong></article>
+      <article class="card"><span class="label">Transaksi</span><strong class="value">${htmlEscape(summary.transactions || 0)}</strong></article>
+    </section>
+    <section class="note">
+      <strong>Catatan</strong>
+      <p>${htmlEscape(report.note || "Tidak ada catatan tambahan.")}</p>
+    </section>
+    <h2>Detail Data</h2>
+    <table>
+      <thead><tr>${columns.map((column) => `<th>${htmlEscape(column)}</th>`).join("")}</tr></thead>
+      <tbody>${printableRows(report.rows, columns)}</tbody>
+    </table>
+    <footer>Dokumen ini dibuat dari frontend DOMPET PT AI. Gunakan dialog cetak browser untuk menyimpan sebagai PDF.</footer>
+  </main>
+</body>
+</html>`;
+}
+
+export async function exportPrintableReport(reportType = "cashflow", filters = {}) {
+  const report = await getReportByType(reportType, filters);
+  const file = reportTypeMeta[report.type]?.file || "laporan";
+  return {
+    fileName: `dompet-pt-ai-${file}-print.html`,
+    contentType: "text/html;charset=utf-8",
+    content: buildPrintableReportHtml(report),
+    report,
+    isMock: report.isMock,
+  };
+}
+
 export async function exportCsvReport(reportType = "cashflow", filters = {}) {
   const report = await getReportByType(reportType, filters);
   const lines = [report.columns.join(","), ...report.rows.map((row) => report.columns.map((column) => csvEscape(row[column])).join(","))];
@@ -358,6 +472,7 @@ export const reportService = {
   getReceivableReport,
   getProjectReport,
   generateWhatsAppReport,
+  exportPrintableReport,
   exportCsvReport,
   exportJsonReport,
   createCompactReportSnapshot,
